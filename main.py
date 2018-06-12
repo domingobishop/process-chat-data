@@ -2,14 +2,25 @@ import csv
 
 
 def clean(row):
-    row[0] = row[0].strip()
-    row[1] = row[1].strip()
-    row[2] = row[2].strip()
+    for i in range(3):
+        row[i] = row[i].strip()
+        if row[i] == 'VALUE!' or row[i] == '' or len(row[i]) < 10:
+            return False
     return row
 
 
-with open('data/chat-data-01.csv') as File:
-    reader = csv.reader(File)
-    for row in reader:
-        row = clean(row)
+input_file = csv.reader(open('data/chat-data-01.csv','r', encoding="utf8", errors='ignore'))
+test_question = open('data/test-question.txt','a')
+test_response = open('data/test-response.txt','a')
+training_question = open('data/training-question.txt','a')
+training_response = open('data/training-response.txt','a')
+
+
+for row in input_file:
+    row = clean(row)
+    if row:
         print(row)
+        test_question.write(row[1] + '\n')
+        test_response.write(row[2] + '\n')
+        training_question.write(row[1] + '\n')
+        training_response.write(row[2] + '\n')
